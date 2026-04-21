@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// ⚠️ Ajusta rutas si no usas alias "@"
+// Ajusta rutas si es necesario
 import book1 from "../assets/book-1.jpg";
 import book2 from "../assets/book-2.jpg";
 import book3 from "../assets/book-3.jpg";
@@ -59,7 +59,7 @@ const books = [
     price: "MX$ 890",
     code: "DB-019",
   },
-  // duplicados para ejemplo
+  // duplicados ejemplo
   {
     img: book1,
     title: "Forma y Función",
@@ -75,38 +75,30 @@ const books = [
     cat: "Edificación",
     price: "MX$ 1,890",
     code: "DB-027",
-  },
-  {
-    img: book3,
-    title: "Atlas Urbano CDMX",
-    author: "M. Larrosa",
-    cat: "Urbanismo",
-    price: "MX$ 980",
-    code: "DB-031",
-  },
-  {
-    img: book4,
-    title: "Manual de Estructuras",
-    author: "Heino Engel",
-    cat: "Estructuras",
-    price: "MX$ 2,150",
-    code: "DB-008",
-  },
-  {
-    img: book1,
-    title: "Detalles Constructivos",
-    author: "Edward Allen",
-    cat: "Edificación",
-    price: "MX$ 1,560",
-    code: "DB-042",
-  },
-  {
+  }, {
     img: book3,
     title: "Ciudad Caminable",
     author: "Jeff Speck",
     cat: "Urbanismo",
     price: "MX$ 890",
     code: "DB-019",
+  },
+  // duplicados ejemplo
+  {
+    img: book1,
+    title: "Forma y Función",
+    author: "Studio Aalto",
+    cat: "Diseño",
+    price: "MX$ 1,240",
+    code: "DB-014",
+  },
+  {
+    img: book2,
+    title: "Construir en Concreto",
+    author: "Tadao Ando ed.",
+    cat: "Edificación",
+    price: "MX$ 1,890",
+    code: "DB-027",
   },
 ];
 
@@ -131,19 +123,24 @@ const Catalog = () => {
     setPage(1);
   }, [active]);
 
-  // función para cambiar página + scroll
+  // cambiar página + scroll tipo navbar
   const changePage = (newPage) => {
     setPage(newPage);
 
-    document
-      .getElementById("productos")
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setTimeout(() => {
+      document
+        .getElementById("productos")
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 50);
   };
 
   return (
-    <section id="productos" className="relative bg-background py-28 md:py-40">
+    <section
+      id="productos"
+      className="scroll-mt-24 relative bg-background py-28 md:py-40"
+    >
       <div className="container-editorial">
-        
+
         {/* HEADER */}
         <div className="mb-16 grid grid-cols-12 gap-6">
           <div className="col-span-12 flex items-center gap-6">
@@ -179,12 +176,46 @@ const Catalog = () => {
         </div>
 
         {/* GRID */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-16 md:grid-cols-3 lg:grid-cols-4">
           {paginatedBooks.map((b, i) => (
-            <article key={`${b.code}-${i}`}>
-              <img src={b.img} alt={b.title} className="w-full" />
-              <h3>{b.title}</h3>
-              <p>{b.author}</p>
+            <article key={`${b.code}-${i}`} className="group">
+              
+              {/* Imagen */}
+              <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
+                <img
+                  src={b.img}
+                  alt={b.title}
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+
+                <div className="absolute inset-0 bg-foreground/0 transition-colors duration-500 group-hover:bg-foreground/10" />
+
+                <button className="absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center bg-background opacity-0 transition-all duration-500 group-hover:opacity-100">
+                  <ArrowUpRight className="h-4 w-4" />
+                </button>
+              </div>
+
+              {/* Código + Precio */}
+              <div className="mt-4 flex items-baseline justify-between">
+                <span className="font-mono-editorial text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+                  {b.code} · {b.cat}
+                </span>
+
+                <span className="font-mono-editorial text-[10px] text-accent">
+                  {b.price}
+                </span>
+              </div>
+
+              {/* Título */}
+              <h3 className="mt-2 font-serif text-2xl font-medium leading-tight">
+                {b.title}
+              </h3>
+
+              {/* Autor */}
+              <p className="mt-1 text-sm italic text-muted-foreground">
+                {b.author}
+              </p>
+
             </article>
           ))}
         </div>
@@ -193,15 +224,9 @@ const Catalog = () => {
         <div className="mt-16 flex justify-center gap-6 items-center">
           <button
             type="button"
-            onClick={() => {
-              changePage(Math.max(page - 1, 1));
-              // Esperamos un momento a que React renderice para mover el scroll
-              setTimeout(() => {
-                document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' });
-              }, 100);
-            }}
+            onClick={() => changePage(Math.max(page - 1, 1))}
             disabled={page === 1}
-            className="px-4 py-2 border text-sm disabled:opacity-30 hover:bg-secondary/5 transition-colors"
+            className="px-4 py-2 border text-sm disabled:opacity-30 hover:bg-secondary/5"
           >
             ← Anterior
           </button>
@@ -212,20 +237,13 @@ const Catalog = () => {
 
           <button
             type="button"
-            onClick={() => {
-              changePage(Math.min(page + 1, totalPages));
-              // El timeout asegura que el scroll ocurra después de cargar los nuevos datos
-              setTimeout(() => {
-                document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' });
-              }, 100);
-            }}
+            onClick={() => changePage(Math.min(page + 1, totalPages))}
             disabled={page === totalPages}
-            className="px-4 py-2 border text-sm disabled:opacity-30 hover:bg-secondary/5 transition-colors"
+            className="px-4 py-2 border text-sm disabled:opacity-30 hover:bg-secondary/5"
           >
             Siguiente →
           </button>
-</div>
-
+        </div>
 
       </div>
     </section>
