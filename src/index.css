@@ -1,0 +1,128 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* DecoBook — Editorial architectural design system.
+   All colors MUST be HSL. */
+
+@layer base {
+  :root {
+    /* Core palette: ivory paper, ink, gold leaf */
+    --background: 40 33% 97%;          /* #F7F5F0 ivory */
+    --foreground: 0 0% 10%;            /* #1A1A1A ink */
+
+    --card: 40 33% 97%;
+    --card-foreground: 0 0% 10%;
+
+    --popover: 40 20% 99%;
+    --popover-foreground: 0 0% 10%;
+
+    --primary: 0 0% 10%;               /* Ink black */
+    --primary-foreground: 40 33% 97%;
+
+    --secondary: 40 18% 92%;           /* Warm stone */
+    --secondary-foreground: 0 0% 10%;
+
+    --muted: 40 14% 90%;
+    --muted-foreground: 0 0% 35%;
+
+    --accent: 44 56% 52%;              /* #D4AF37 gold leaf */
+    --accent-foreground: 0 0% 10%;
+
+    --gold: 44 56% 52%;
+    --gold-soft: 44 40% 78%;
+    --ink: 0 0% 10%;
+    --ivory: 40 33% 97%;
+    --concrete: 30 6% 78%;
+
+    --destructive: 0 70% 45%;
+    --destructive-foreground: 40 33% 97%;
+
+    --border: 30 10% 85%;
+    --input: 30 10% 85%;
+    --ring: 44 56% 52%;
+
+    --radius: 0.125rem;
+
+    /* Editorial gradients & shadows */
+    --gradient-ink: linear-gradient(180deg, hsl(0 0% 10%) 0%, hsl(0 0% 6%) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(44 56% 52%) 0%, hsl(40 65% 65%) 100%);
+    --gradient-paper: linear-gradient(180deg, hsl(40 33% 97%) 0%, hsl(40 25% 93%) 100%);
+    --shadow-editorial: 0 30px 80px -30px hsl(0 0% 10% / 0.25);
+    --shadow-card: 0 1px 0 0 hsl(0 0% 10% / 0.06), 0 20px 40px -20px hsl(0 0% 10% / 0.18);
+    --shadow-gold: 0 10px 40px -10px hsl(44 56% 52% / 0.4);
+
+    --transition-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+
+    --sidebar-background: 40 33% 97%;
+    --sidebar-foreground: 0 0% 10%;
+    --sidebar-primary: 0 0% 10%;
+    --sidebar-primary-foreground: 40 33% 97%;
+    --sidebar-accent: 40 18% 92%;
+    --sidebar-accent-foreground: 0 0% 10%;
+    --sidebar-border: 30 10% 85%;
+    --sidebar-ring: 44 56% 52%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "ss01", "cv11";
+  }
+
+  ::selection {
+    background: hsl(var(--accent) / 0.4);
+    color: hsl(var(--foreground));
+  }
+}
+
+@layer components {
+  .font-serif-display {
+    font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+    font-feature-settings: "lnum", "ss01";
+  }
+  .font-mono-editorial {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .eyebrow {
+    @apply font-mono-editorial text-xs uppercase tracking-[0.25em] text-muted-foreground;
+  }
+
+  .blueprint-grid {
+    background-image:
+      linear-gradient(hsl(var(--foreground) / 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--foreground) / 0.04) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+
+  .gold-rule {
+    background: var(--gradient-gold);
+  }
+
+  .hover-lift {
+    transition: transform 0.5s var(--transition-smooth), box-shadow 0.5s var(--transition-smooth);
+  }
+  .hover-lift:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-card);
+  }
+}
+
+@layer utilities {
+  .container-editorial {
+    @apply mx-auto w-full max-w-[1320px] px-6 md:px-10;
+  }
+  .text-balance { text-wrap: balance; }
+}
