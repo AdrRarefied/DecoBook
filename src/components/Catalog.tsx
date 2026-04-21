@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // Ajusta rutas si es necesario
@@ -75,30 +75,6 @@ const books = [
     cat: "Edificación",
     price: "MX$ 1,890",
     code: "DB-027",
-  }, {
-    img: book3,
-    title: "Ciudad Caminable",
-    author: "Jeff Speck",
-    cat: "Urbanismo",
-    price: "MX$ 890",
-    code: "DB-019",
-  },
-  // duplicados ejemplo
-  {
-    img: book1,
-    title: "Forma y Función",
-    author: "Studio Aalto",
-    cat: "Diseño",
-    price: "MX$ 1,240",
-    code: "DB-014",
-  },
-  {
-    img: book2,
-    title: "Construir en Concreto",
-    author: "Tadao Ando ed.",
-    cat: "Edificación",
-    price: "MX$ 1,890",
-    code: "DB-027",
   },
 ];
 
@@ -118,12 +94,10 @@ const Catalog = () => {
     page * itemsPerPage
   );
 
-  // reset página al cambiar categoría
   useEffect(() => {
     setPage(1);
   }, [active]);
 
-  // cambiar página + scroll tipo navbar
   const changePage = (newPage) => {
     setPage(newPage);
 
@@ -133,6 +107,18 @@ const Catalog = () => {
         ?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 50);
   };
+
+  // 🔥 WHATSAPP
+  const phone = "523326149732";
+
+  const getWhatsAppLink = (bookTitle) => {
+    const message = `Hola, me interesa el libro "${bookTitle}". ¿Me puedes dar más información?`;
+    return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+  };
+
+  const generalWhatsAppLink = `https://wa.me/${phone}?text=${encodeURIComponent(
+    "Hola, estoy buscando un libro en específico. ¿Me puedes ayudar?"
+  )}`;
 
   return (
     <section
@@ -180,7 +166,6 @@ const Catalog = () => {
           {paginatedBooks.map((b, i) => (
             <article key={`${b.code}-${i}`} className="group">
               
-              {/* Imagen */}
               <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
                 <img
                   src={b.img}
@@ -190,9 +175,15 @@ const Catalog = () => {
 
                 <div className="absolute inset-0 bg-foreground/0 transition-colors duration-500 group-hover:bg-foreground/10" />
 
-                <button className="absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center bg-background opacity-0 transition-all duration-500 group-hover:opacity-100">
-                  <ArrowUpRight className="h-4 w-4" />
-                </button>
+                {/* BOTÓN WHATSAPP */}
+                <a
+                  href={getWhatsAppLink(b.title)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center bg-background opacity-0 transition-all duration-500 group-hover:opacity-100 hover:bg-accent hover:text-background"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                </a>
               </div>
 
               {/* Código + Precio */}
@@ -206,16 +197,13 @@ const Catalog = () => {
                 </span>
               </div>
 
-              {/* Título */}
               <h3 className="mt-2 font-serif text-2xl font-medium leading-tight">
                 {b.title}
               </h3>
 
-              {/* Autor */}
               <p className="mt-1 text-sm italic text-muted-foreground">
                 {b.author}
               </p>
-
             </article>
           ))}
         </div>
@@ -243,6 +231,19 @@ const Catalog = () => {
           >
             Siguiente →
           </button>
+        </div>
+
+        {/* BOTÓN EXTRA */}
+        <div className="mt-20 flex justify-center">
+          <a
+            href={generalWhatsAppLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-3 border-b border-foreground pb-2 text-xs uppercase tracking-[0.25em] transition-colors hover:border-accent hover:text-accent"
+          >
+            ¿Buscas otro libro? Podemos conseguirlo
+            <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+          </a>
         </div>
 
       </div>
